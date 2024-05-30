@@ -2,25 +2,30 @@ package com.devteria.identity_service.controller;
 
 import com.devteria.identity_service.dto.request.ApiResponse;
 import com.devteria.identity_service.dto.request.UserCreationRequest;
+import com.devteria.identity_service.dto.request.UserUpdateRequest;
+import com.devteria.identity_service.dto.response.UserResponse;
 import com.devteria.identity_service.entity.User;
 import com.devteria.identity_service.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class controller {
 
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping
-    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setResult( userService.createUser(request));
+    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+        ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.createUser(request));
         return apiResponse;
     }
 
@@ -30,7 +35,7 @@ public class controller {
     }
 
     @GetMapping("/{userId}")
-    User getUserById(@PathVariable Long userId) {
+    UserResponse getUserById(@PathVariable Long userId) {
         return userService.getUser(userId);
     }
 
@@ -41,7 +46,7 @@ public class controller {
     }
 
     @PutMapping("/{userId}")
-    User updateUser(@PathVariable Long userId, @RequestBody UserCreationRequest request) {
+    UserResponse updateUser(@PathVariable Long userId, @RequestBody UserUpdateRequest request) {
         return userService.updateUser(userId, request);
     }
 }
